@@ -1,7 +1,7 @@
 // html setup
- var pupilsHTMLCollection = document.getElementsByClassName('pupil')
- var pupilsArray = Array.from(pupilsHTMLCollection)
- console.log('pupilsArray', pupilsArray)
+ var itemsHTMLCollection = document.getElementsByClassName('parallax-item')
+ var itemsArray = Array.from(itemsHTMLCollection)
+
 
 
 // input setup
@@ -12,8 +12,8 @@ var input = {
         current:0,
     },
     mouseY:{
-        start: 100,
-        end:window.innerHeight -100,
+        start: 0,
+        end:window.innerHeight ,
         current:0,
     }
 };
@@ -25,13 +25,13 @@ input.mouseY.range= input.mouseY.end - input.mouseY.start
 //output setup
 var output = {
     x:{
-        start: -45,
-        end: 45,
+        start: -150,
+        end: 150,
         current:0,
     },
     y:{
-        start: -45,
-        end: 45,
+        start: -150,
+        end: 150,
         current:0,
     },
 }
@@ -51,19 +51,22 @@ var handelMouseMove = function(event){
     
     // output x
     output.x.current = output.x.end - (input.mouseX.fraction * output.x.range)
-    output.x.opposite = output.x.start + (input.mouseX.fraction * output.x.range)
+    
     // output y
     output.y.current = output.y.end -(input.mouseY.fraction * output.y.range)
-    output.y.opposite = output.y.start + (input.mouseY.fraction * output.y.range)
+   
     // apply output to html
-    pupilsArray.forEach((pupil, i)=>{
+    itemsArray.forEach((item, i)=>{ 
+        var depth = parseFloat(item.dataset.depth, 10);
+        var itemOutput = {
+            x: output.x.current - (output.x.current * depth),
+            y: output.y.current - (output.y.current * depth),
+            zIndex:10000 - (10000 * depth)
+        }
 
-      if(i === 0){
-        pupil.style.transform = 'translate('+output.x.opposite+'px, '+output.y.opposite+'px)'
-      }else{
-        pupil.style.transform = 'translate('+output.x.current+'px, '+output.y.current+'px)'
-      }
-
+        console.log(i, 'depth', depth)
+        item.style.zIndex = itemOutput.zIndex;
+        item.style.transform = 'translate('+itemOutput.x+'px, '+itemOutput.y+'px)'
     })
 
 
